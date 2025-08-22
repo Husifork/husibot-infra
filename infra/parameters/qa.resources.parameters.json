@@ -7,7 +7,7 @@
     "tagambiente":                        { "value": "QA" },
     "acaEnvironmentName":                 { "value": "acaenv-qa-husibot-001" },
     "containerAppName":                   { "value": "acaqa-husibot-api-001" },
-    "containerImage":                     { "value": "mcr.microsoft.com/azuredocs/containerapps-helloworld" },
+    "containerImage":                     { "value": "docker.io/library/busybox:latest" },
     "containerExternalIngress":           { "value": false },
     "containerTargetPort":                { "value": 443 }
 
