@@ -7,8 +7,8 @@ param containerImage string
 param externalIngress bool
 param targetPort int
 
-// Forzamos valores en variables para evitar problemas de parseo en línea
-var fixedCpu = 0.5
+// Evita literales decimales: usa JSON o notación científica
+var fixedCpu = json('0.5')  // alternativa: 5e-1
 var fixedMemory = '1Gi'
 
 resource app 'Microsoft.App/containerApps@2024-03-01' = {
@@ -17,7 +17,6 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = {
   properties: {
     managedEnvironmentId: managedEnvironmentId
     configuration: {
-      // incluir ingress solo si externalIngress es true
       ingress: externalIngress ? {
         external: true
         targetPort: targetPort
