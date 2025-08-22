@@ -6,9 +6,9 @@
     "tagproyecto":                        { "value": "Gestor de Carga QA" },
     "tagambiente":                        { "value": "QA" },
     "acaEnvironmentName":                 { "value": "acaenv-qa-husibot-001" },
-    "containerAppName":                   { "value": "aca-qa-husibot-api-001" },
-    "containerImage":                     { "value": "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest" },
-    "containerExternalIngress":           { "value": true },
+    "containerAppName":                   { "value": "acaqa-husibot-api-001" },
+    "containerImage":                     { "value": "mcr.microsoft.com/azuredocs/containerapps-helloworld" },
+    "containerExternalIngress":           { "value": false },
     "containerTargetPort":                { "value": 443 }
 
   }
