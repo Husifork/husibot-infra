@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location":                           { "value": "eastus2" },
+    "tagproyecto":                        { "value": "Gestor de Carga QA" },
+    "tagambiente":                        { "value": "QA" },
+    "appServicePlanNameGestorDocumental": { "value": "ASPL-QA-GESTORCARGA-001" },
+    "appServiceGestorDocumental":         { "value": "APSV-QA-GESTORCARGA-002" },
+    "appServiceGestorDocumentalkind":     { "value": "app,linux" },
+    "staticwebAppQAName":                 { "value": "stwa-qa-gestordecarga-001" },
+    "staticwebAppQAsku":                  { "value": "Free" },
+    "staticwebAppQArepo":                 { "value": "https://github.com/LisitSPA/GestorDocumental.Front.2" },
+    "staticwebAppQAbranch":               { "value": "qa" },
+    "staticwebAppQAprovider":             { "value": "GitHub" },
+    "sqlServerName":                      { "value": "asql-gestorcarga-001" },
+    "sqlAdministratorLogin":              { "value": "" },
+    "sqlAdministratorPassword":           { "value": "" },
+    "sqlDatabaseName1":                   { "value": "gestor-doc-bd-QA" },
+    "sqlDatabaseSku1":                    { "value": "Basic" },
+    "sqlDatabaseName2":                   { "value": "gestor-doc-bd" },
+    "sqlDatabaseSku2":                    { "value": "Basic" }
+
+  }
+}

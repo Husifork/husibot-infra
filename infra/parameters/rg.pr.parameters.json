@@ -1,0 +1,10 @@
+{
+  "deployments": {
+    "value": [
+      {
+        "resourceGroupName": "RSGR-PR-GESTORCARGA-001",
+        "location": "eastus2"
+      }
+    ]
+  }
+}

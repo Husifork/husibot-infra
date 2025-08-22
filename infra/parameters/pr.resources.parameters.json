@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location":                           { "value": "eastus2" },
+    "tagproyecto":                        { "value": "Gestor de Carga PR" },
+    "tagambiente":                        { "value": "PR" },
+    "appServicePlanNameGestorDocumental": { "value": "ASPL-PR-GESTORCARGA-001" },
+    "appServiceGestorDocumental":         { "value": "APSV-PR-GESTORCARGA-003" },
+    "appServiceGestorDocumentalkind":     { "value": "app,linux" },
+    "storageAccountName1":                { "value": "stacprgestorcarga002" },
+    "staticwebAppPRName":                 { "value": "stwa-pr-gestorcarga-001" },
+    "staticwebAppPRsku":                  { "value": "Free" },
+    "staticwebAppPRrepo":                 { "value": "https://github.com/LisitSPA/GestorDocumental.Front.2" },
+    "staticwebAppPRbranch":               { "value": "main" },
+    "staticwebAppPRprovider":             { "value": "GitHub" }
+    
+    }
+}

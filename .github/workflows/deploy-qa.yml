@@ -1,0 +1,92 @@
+name: Deploy Gestor de Carga - QA
+
+on:
+  push:
+    branches:
+      - qa
+  workflow_dispatch:
+
+jobs:
+
+  CI:
+    name: Validación de Infraestructura (CI)
+    runs-on: ubuntu-latest
+    environment: qa
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Iniciar sesión en Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Validar compilación de Bicep
+        run: az bicep build --file infra/subscription-QA.bicep
+
+      - name: Validar despliegue resource group
+        run: |
+          az deployment sub validate \
+            --location eastus2 \
+            --template-file infra/rg.bicep \
+            --parameters infra/parameters/rg.qa.parameters.json
+
+      - name: Validar despliegue recursos
+        run: |
+          az deployment sub validate \
+            --location eastus2 \
+            --template-file infra/subscription-QA.bicep \
+            --parameters infra/parameters/qa.resources.parameters.json \
+            --parameters sqlAdministratorLogin='${{ secrets.SQL_ADMIN_USER }}' sqlAdministratorPassword='${{ secrets.SQL_ADMIN_PASS }}'
+
+      - name: Plan de despliegue
+        run: |
+          az deployment sub what-if \
+            --location eastus2 \
+            --template-file infra/subscription-QA.bicep \
+            --parameters infra/parameters/qa.resources.parameters.json \
+            --parameters sqlAdministratorLogin='${{ secrets.SQL_ADMIN_USER }}' sqlAdministratorPassword='${{ secrets.SQL_ADMIN_PASS }}'
+  
+      - name: Azure Logout
+        run: az logout
+
+
+  CD:
+    name: Despliegue de Infraestructura (CD)
+    runs-on: ubuntu-latest
+    needs: CI
+    environment: qa
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v3
+
+    - name: Iniciar sesión en Azure
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        enable-AzPSSession: true
+    
+    - name: Crear Resource Groups
+      uses: azure/cli@v1
+      with:
+        inlineScript: |
+          az deployment sub create \
+            --name RG-$(date +%s) \
+            --location eastus2 \
+            --template-file infra/rg.bicep \
+            --parameters infra/parameters/rg.qa.parameters.json
+            
+    - name: Desplegar recursos a los RG
+      uses: azure/cli@v1
+      with:
+        inlineScript: |
+          az deployment sub create \
+            --name SUBSCRIPTION-QA-$(date +%Y%m%d%H%M%S) \
+            --location eastus2 \
+            --template-file infra/subscription-QA.bicep \
+            --parameters infra/parameters/qa.resources.parameters.json \
+            --parameters sqlAdministratorLogin='${{ secrets.SQL_ADMIN_USER }}' sqlAdministratorPassword='${{ secrets.SQL_ADMIN_PASS }}'
+
+    - name: Azure Logout
+      run: az logout

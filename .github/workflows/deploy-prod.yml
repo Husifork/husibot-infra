@@ -1,0 +1,84 @@
+name: Deploy Gestor de Carga - Prod
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+
+  CI:
+    name: Validación de Infraestructura (CI)
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Iniciar sesión en Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Validar compilación de Bicep
+        run: az bicep build --file infra/subscription-PR.bicep
+      
+      - name: Validar despliegue resource group
+        run: |
+          az deployment sub validate \
+            --location eastus2 \
+            --template-file infra/rg.bicep \
+            --parameters infra/parameters/rg.pr.parameters.json
+
+#      - name: Validar despliegue recursos
+#        run: |
+#          az deployment sub validate \
+#            --location eastus2 \
+#            --template-file infra/subscription-PR.bicep \
+#            --parameters infra/parameters/pr.resources.parameters.json
+
+      - name: Plan de despliegue
+        run: |
+          az deployment sub what-if \
+            --location eastus2 \
+            --template-file infra/subscription-PR.bicep \
+            --parameters infra/parameters/pr.resources.parameters.json
+
+      - name: Azure Logout
+        run: az logout  
+
+  CD:
+    name: Despliegue de Infraestructura (CD)
+    runs-on: ubuntu-latest
+    needs: CI
+    environment: prod
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Iniciar sesión en Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: true
+      
+      - name: Crear Resource Groups
+        uses: azure/cli@v1
+        with:
+          inlineScript: |
+            az deployment sub create \
+              --name RG-$(date +%s) \
+              --location eastus2 \
+              --template-file infra/rg.bicep \
+              --parameters infra/parameters/rg.pr.parameters.json
+
+      - name: Desplegar recursos a los RG
+        uses: azure/cli@v1
+        with:
+          inlineScript: |
+            az deployment sub create \
+              --name SUBSCRIPTION-PR-$(date +%Y%m%d%H%M%S) \
+              --location eastus2 \
+              --template-file infra/subscription-PR.bicep \
+              --parameters infra/parameters/pr.resources.parameters.json
