@@ -30,5 +30,5 @@ module acaApp 'modules/containerApps/containerApp.bicep' = {
     externalIngress: containerExternalIngress
     targetPort: containerTargetPort
   }
-  dependsOn: [ acaEnv ]
+//  dependsOn: [ acaEnv ]
 }
