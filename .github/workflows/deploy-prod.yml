@@ -3,7 +3,7 @@ name: Deploy Gestor de Carga - Prod
 on:
   push:
     branches:
-      - main
+      - mainn
   workflow_dispatch:
 
 jobs:
