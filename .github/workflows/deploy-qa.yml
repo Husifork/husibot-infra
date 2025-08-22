@@ -32,12 +32,12 @@ jobs:
             --template-file infra/rg.bicep \
             --parameters infra/parameters/rg.qa.parameters.json
 
-      - name: Validar despliegue recursos
-        run: |
-          az deployment sub validate \
-            --location eastus2 \
-            --template-file infra/subscription-QA.bicep \
-            --parameters infra/parameters/qa.resources.parameters.json 
+   #   - name: Validar despliegue recursos
+   #     run: |
+   #       az deployment sub validate \
+   #         --location eastus2 \
+   #         --template-file infra/subscription-QA.bicep \
+   #         --parameters infra/parameters/qa.resources.parameters.json 
 
       - name: Plan de despliegue
         run: |
