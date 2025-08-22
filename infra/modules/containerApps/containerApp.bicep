@@ -4,8 +4,8 @@ param containerAppName string
 param location string = resourceGroup().location
 param managedEnvironmentId string
 param containerImage string
-param externalIngress bool = false
-param targetPort int = 8080
+param externalIngress bool
+param targetPort int
 
 resource app 'Microsoft.App/containerApps@2024-03-01' = {
   name: containerAppName
@@ -13,7 +13,7 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = {
   properties: {
     managedEnvironmentId: managedEnvironmentId
     configuration: {
-      // Solo crea ingress si quieres exponer la app
+      // Solo incluir ingress si quieres exponer
       ingress: externalIngress ? {
         external: true
         targetPort: targetPort
@@ -21,7 +21,7 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = {
       } : null
 
       activeRevisionsMode: 'Single'
-      // runtime: 'containerapp'  // <-- quitar: no válido en 2024-03-01
+      // runtime: 'containerapp'  // <- quitar, no es válido en este apiVersion
     }
     template: {
       containers: [
@@ -29,8 +29,8 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = {
           name: 'app'
           image: containerImage
           resources: {
-            cpu: 1.0 / 2.0   // 0.5; usa esta forma si tu bicep se quejara del literal
-            memory: '1Gi'    // string con unidad (Gi)
+            cpu: 1.0 / 2.0   // 0.5; usa esta forma si tu bicep se queja del literal
+            memory: '1Gi'    // <-- STRING con unidad; p.ej. '1Gi', '2Gi'
           }
         }
       ]

@@ -1,6 +1,6 @@
 targetScope = 'subscription'
 
-param location string = resourceGroup().location
+param location string
 param tagproyecto string
 param tagambiente string
 param acaEnvironmentName string
